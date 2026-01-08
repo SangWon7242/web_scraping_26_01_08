@@ -39,26 +39,48 @@ source web_scrap/bin/activate
 deactivate
 ```
 
-## 📦 추천 패키지
+## 📦 필수 라이브러리 가이드
 
-웹 스크래핑에 유용한 패키지들:
+웹 스크래핑을 처음 시작하는 학생들을 위한 핵심 라이브러리 세트입니다. 현재 이 가상환경에 모두 설치되어 있습니다.
 
-```bash
-# HTTP 요청
-pip install requests
+### 1. `requests` (데이터 가져오기)
+웹 서버에 요청을 보내고 페이지의 HTML 소스를 받아오는 역할을 합니다.
+- **역할**: 브라우저 주소창에 URL을 입력하고 엔터를 치는 동작을 코드로 수행합니다.
+- **간단 사용법**:
+  ```python
+  import requests
+  response = requests.get("https://www.google.com")
+  print(response.status_code) # 200이면 성공!
+  ```
 
-# HTML 파싱
-pip install beautifulsoup4 lxml
+### 2. `beautifulsoup4` & `lxml` (데이터 분석하기)
+가져온 복잡한 HTML 문서에서 원하는 정보(제목, 가격, 링크 등)만 쏙쏙 골라냅니다. `lxml`은 이 과정을 더 빠르고 정확하게 도와주는 엔진입니다.
+- **역할**: 거대한 HTML 숲에서 우리가 필요한 나무(데이터)만 찾아주는 탐지기입니다.
+- **간단 사용법**:
+  ```python
+  from bs4 import BeautifulSoup
+  soup = BeautifulSoup(html_source, "lxml")
+  title = soup.select_one("h1").text
+  ```
 
-# 동적 웹페이지 (JavaScript 렌더링)
-pip install selenium
+### 3. `pandas` (데이터 저장하기)
+수집한 수많은 데이터를 엑셀처럼 표 형태로 정리하고, 파일(CSV, Excel)로 저장하는 데 사용합니다.
+- **역할**: 스크래핑한 결과물을 보기 좋게 정리해 주는 '데이터 비서'입니다.
+- **간단 사용법**:
+  ```python
+  import pandas as pd
+  df = pd.DataFrame(data_list)
+  df.to_csv("result.csv", index=False)
+  ```
 
-# 비동기 스크래핑
-pip install aiohttp
+---
 
-# 고급 스크래핑 프레임워크
-pip install scrapy
-```
+## 🛠️ 추가 도구 (필요시 설치)
+
+나중에 더 복잡한 웹사이트를 다룰 때 참고하세요:
+
+- **`selenium`**: 버튼 클릭, 로그인, 무한 스크롤 등 사람처럼 동작해야 할 때 사용합니다.
+- **`playwright`**: Selenium보다 빠르고 현대적인 웹 자동화 도구입니다.
 
 ## 📋 패키지 관리
 
