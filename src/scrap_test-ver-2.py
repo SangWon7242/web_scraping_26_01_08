@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup
 import requests # 웹사이트에 요청을 보내고 응답을 받는 라이브러리
+import pandas as pd # 데이터 처리 및 엑셀 저장을 위한 라이브러리
+from datetime import datetime # 오늘 날짜를 가져오기 위한 라이브러리
 
 # 1. requests : 원하는 웹사이트에 요청
 url = "https://news.naver.com/section/105"
@@ -68,3 +70,20 @@ if resp.status_code == 200:
   # print("\n전체 뉴스 리스트:")
   # for idx, news in enumerate(news_list, 1):
   #   print(f"{idx}. {news}")
+
+  # ======== 엑셀 파일로 저장 ========
+  
+  # 오늘 날짜를 'YYYYMMDD' 형식으로 가져오기
+  today = datetime.now().strftime("%Y%m%d")
+  
+  # 저장할 파일 이름 생성 (예: naver_news_20260113.xlsx)
+  file_name = f"excel_data/naver_news_{today}.xlsx"
+  
+  # news_list를 pandas DataFrame으로 변환
+  df = pd.DataFrame(news_list)
+  
+  # 엑셀 파일로 저장 (index=False로 인덱스 번호 제외)
+  df.to_excel(file_name, index=False)
+  
+  # 저장 완료 메시지 출력
+  print(f"\n📁 엑셀 파일 저장 완료: {file_name}")
