@@ -1,35 +1,32 @@
+from bs4 import BeautifulSoup
 import requests # 웹사이트에 요청을 보내고 응답을 받는 라이브러리
 
 # 1. requests : 원하는 웹사이트에 요청
+url = "https://news.naver.com/section/105"
+
 try:
-  response = requests.get("https://www.naver.com", timeout=5)
-  print(f"1. Requests: SUCCESS (Status Code: {response.status_code})")
+  resp = requests.get(url, timeout=5)
+  print(f"1. Requests: SUCCESS (Status Code: {resp.status_code})")
 except Exception as e:
   print(f"1. Requests: FAILED ({e})")
 
-'''
-# 2. BeautifulSoup & lxml Test
-html_doc = "<html><body><h1>Hello, Scraper!</h1></body></html>"
-try:
-  soup = BeautifulSoup(html_doc, "lxml")
-  h1_text = soup.select_one("h1").text
-  if h1_text == "Hello, Scraper!":
-    print("2. BeautifulSoup & lxml: SUCCESS")
-  else:
-    print("2. BeautifulSoup & lxml: FAILED (Wrong text)")
-except Exception as e:
-  print(f"2. BeautifulSoup & lxml: FAILED ({e})")
+if resp.status_code == 200:
+  soup = BeautifulSoup(resp.text, 'lxml')
+  # print(soup)
+  # 뉴스 헤드라인 타이틀 가져오기
+  # find() : 검색 된 엘리먼트중에 제일 먼저 검색된 데이터 하나만 수집
+  print(soup.find('a', class_="sa_head_link").get_text())
 
-# 3. Pandas Test
-data = {"Name": ["Test"], "Value": [100]}
-try:
-  df = pd.DataFrame(data)
-    if not df.empty:
-      print("3. Pandas: SUCCESS")
-    else:
-      print("3. Pandas: FAILED (Empty DataFrame)")
-except Exception as e:
-    print(f"3. Pandas: FAILED ({e})")
+  # 각 뉴스의 헤드라인 기사 제목
+  # find_all() : 검색 된 엘리먼트들을 리스트화 한다.
+  print(soup.find_all('strong', class_="sa_text_strong"))
 
-print("-----------------------------------------")
-'''
+  titles_elements = soup.find_all('strong', class_="sa_text_strong")
+
+  # 텍스트만 추출
+  titles = [title.get_text(strip=True) for title in titles_elements]
+
+  # print(titles)
+  for idx, title in enumerate(titles):
+    no = idx + 1
+    print(f"{no} : {title}")
